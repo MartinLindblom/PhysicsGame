@@ -30,6 +30,8 @@ public class Game
             public void initialize()
             {
                 // Instantiate the first objects here!
+                //chacha
+                System.out.println("halloj");
             }
 
             @Override
