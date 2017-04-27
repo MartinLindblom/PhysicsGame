@@ -64,7 +64,6 @@ public class Game
             for (GameObject gameObject : currentGameObjects)
             {
                 gameObject.update(getDeltaTime());
-
                 gameObject.render(g);
             }
 

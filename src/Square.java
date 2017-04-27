@@ -24,7 +24,6 @@ public class Square extends GameObject
     public void initialize()
     {
         System.out.println("Created square");
-
         image = AssetLoader.loadImage("DefaultImage.png");
     }
 
@@ -33,22 +32,22 @@ public class Square extends GameObject
     {
         if (getGameState().isKeyDown(KeyEvent.VK_W))
         {
-            y -= 2 * deltaTime;
+            y -= 20 * deltaTime;
         }
 
         if (getGameState().isKeyDown(KeyEvent.VK_S))
         {
-            y += 2 * deltaTime;
+            y += 20 * deltaTime;
         }
 
         if (getGameState().isKeyDown(KeyEvent.VK_A))
         {
-            x -= 2 * deltaTime;
+            x -= 20 * deltaTime;
         }
 
         if (getGameState().isKeyDown(KeyEvent.VK_D))
         {
-            x += 2 * deltaTime;
+            x += 20 * deltaTime;
         }
     }
 
