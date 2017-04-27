@@ -1,4 +1,4 @@
-package Engine;
+import Engine.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ public class Game
             public void initialize()
             {
                 // Instantiate the first objects here!
+                instantiateGameObject(new Square());
             }
 
             @Override
@@ -75,7 +76,7 @@ public class Game
 
     private float getDeltaTime()
     {
-        float deltaTime = (System.nanoTime() - lastTimeStamp) / 1000000000f;
+        float deltaTime = (System.nanoTime() - lastTimeStamp) / 100000f;
         lastTimeStamp = System.nanoTime();
 
         return deltaTime;
