@@ -30,7 +30,6 @@ public class Game
             public void initialize()
             {
                 // Instantiate the first objects here!
-                instantiateGameObject(new Square());
             }
 
             @Override
