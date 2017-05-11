@@ -1,10 +1,18 @@
+package GameLogic;
+
 import Engine.*;
+import GameLogic.Flamman.FlammanLevel;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Game
 {
+    public static final float GRAVITY = 9.82f;
+    public static final int PIXELS_PER_METER = 50;
+
+
+
     private GameWindow window;
     private GameObjectManager gameObjectManager;
 
@@ -30,6 +38,7 @@ public class Game
             public void initialize()
             {
                 // Instantiate the first objects here!
+                instantiateGameObject(new FlammanLevel());
             }
 
             @Override
@@ -52,17 +61,21 @@ public class Game
 
     public void run()
     {
+        float deltaTime;
         lastTimeStamp = System.nanoTime();
 
         while (!window.shouldClose())
         {
+            deltaTime = (System.nanoTime() - lastTimeStamp) / 1000000000f;
+            lastTimeStamp = System.nanoTime();
+
             java.util.List<GameObject> currentGameObjects = new ArrayList<>(gameObjectManager.getGameObjects());
 
             Graphics2D g = window.getGraphics();
 
             for (GameObject gameObject : currentGameObjects)
             {
-                gameObject.update(getDeltaTime());
+                gameObject.update(deltaTime);
                 gameObject.render(g);
             }
 
@@ -70,13 +83,5 @@ public class Game
         }
 
         window.close();
-    }
-
-    private float getDeltaTime()
-    {
-        float deltaTime = (System.nanoTime() - lastTimeStamp) / 100000f;
-        lastTimeStamp = System.nanoTime();
-
-        return deltaTime;
     }
 }

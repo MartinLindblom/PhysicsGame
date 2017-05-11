@@ -1,7 +1,9 @@
+import GameLogic.Game;
+
 public class Main
 {
     public static void main(String[] args)
     {
-        new Game(800, 600, "Hello World!").run();
+        new Game(1280, 720, "Hello World!").run();
     }
 }

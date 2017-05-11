@@ -24,4 +24,14 @@ public class Vector
     {
         return y;
     }
+
+    public void setX(float value)
+    {
+        x = value;
+    }
+
+    public void setY(float value)
+    {
+        y = value;
+    }
 }
