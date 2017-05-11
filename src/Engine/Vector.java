@@ -34,4 +34,12 @@ public class Vector
     {
         y = value;
     }
+
+    public Vector add(Vector v)
+    {
+        setX(getX() + v.getX());
+        setY(getY() + v.getY());
+
+        return this;
+    }
 }

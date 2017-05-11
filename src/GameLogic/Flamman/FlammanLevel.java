@@ -12,8 +12,8 @@ public class FlammanLevel extends GameObject
     @Override
     public void initialize()
     {
-        instantiateGameObject(new FlammanHouse(new Vector(300, getGameState().getGameWindow().getHeight() - 456)));
-        instantiateGameObject(new Player(new Vector(50, getGameState().getGameWindow().getHeight() - 144)));
+        instantiateGameObject(new FlammanHouse(new Vector(300, 456)));
+        instantiateGameObject(new Player(new Vector(50, 144)));
     }
 
     @Override
