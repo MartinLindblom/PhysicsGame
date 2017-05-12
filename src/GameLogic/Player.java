@@ -24,11 +24,13 @@ enum PlayerState
 
 public class Player extends GameObject
 {
-    private final float DRAG_COEFFICIENT = 1f;
-    private final float FRICTION_COEFFICIENT = 10f;
+    private float DRAG_COEFFICIENT = 10f;
+    private float FRICTION_COEFFICIENT = 0.45f;
     private final float MASS = 70;
-    private final float MOVEMENT_FORCE = 100000f;
-    private final float JUMP_FORCE = 9000f;
+    private float MOVEMENT_FORCE = 20f;
+    private float JUMP_FORCE = 25000;
+
+    private float increment = 0.01f;
 
     private BufferedImage currentTexture;
     private BufferedImage runLeftTexture;
@@ -83,9 +85,9 @@ public class Player extends GameObject
     {
         fa = new Vector(0, 0);
 
-        if (position.getY() <= 144)
+        if (position.getY() < 144 / Game.PIXELS_PER_METER)
         {
-            position.setY(144);
+            position.setY(144 / Game.PIXELS_PER_METER);
             isGrounded = true;
         }
 
@@ -121,7 +123,7 @@ public class Player extends GameObject
                 break;
         }
 
-        Vector graphicalPosition = Formulas.cartesianToGraphical(position, getGameState());
+        Vector graphicalPosition = Formulas.cartesianToGraphical(new Vector(position.getX() * Game.PIXELS_PER_METER, position.getY() * Game.PIXELS_PER_METER), getGameState());
 
         g.drawImage(currentTexture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
     }
@@ -165,11 +167,57 @@ public class Player extends GameObject
             }
         }
 
+        if (getGameState().isKeyDown(KeyEvent.VK_1))
+        {
+            DRAG_COEFFICIENT += increment;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_Q))
+        {
+            DRAG_COEFFICIENT -= increment;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_2))
+        {
+            FRICTION_COEFFICIENT += increment;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_W))
+        {
+            FRICTION_COEFFICIENT -= increment;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_3))
+        {
+            MOVEMENT_FORCE += increment;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_E))
+        {
+            MOVEMENT_FORCE -= increment;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_4))
+        {
+            JUMP_FORCE += increment;
+        }
+
         if (getGameState().isKeyDown(KeyEvent.VK_R))
         {
-            position = new Vector(50, getGameState().getGameWindow().getHeight() - 144);
-            velocity = new Vector(0, 0);
+            JUMP_FORCE -= increment;
         }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_5))
+        {
+            increment += 0.01f;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_T))
+        {
+            increment -= 0.01f;
+        }
+
+        System.out.println(DRAG_COEFFICIENT + "     " + FRICTION_COEFFICIENT + "        " + MOVEMENT_FORCE + "      " + JUMP_FORCE + "      " + increment);
     }
 
     private void calculateForces()
