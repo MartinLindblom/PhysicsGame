@@ -39,6 +39,8 @@ public class Player extends GameObject
     private BufferedImage runRightTexture;
     private BufferedImage standLeftTexture;
     private BufferedImage standRightTexture;
+    private BufferedImage flyingLeftTexture;
+    private BufferedImage flyingRightTexture;
 
     private Vector position;
 
@@ -78,6 +80,8 @@ public class Player extends GameObject
         runRightTexture = AssetLoader.loadImage("RightRunning.png");
         standLeftTexture = AssetLoader.loadImage("LeftStanding.png");
         standRightTexture = AssetLoader.loadImage("RightStanding.png");
+        flyingLeftTexture = AssetLoader.loadImage("LeftJumping.png");
+        flyingRightTexture = AssetLoader.loadImage("RightJumping.png");
 
         currentTexture = standRightTexture;
     }
@@ -122,6 +126,14 @@ public class Player extends GameObject
 
             case MOVING_RIGHT_RUNNING:
                 currentTexture = runRightTexture;
+                break;
+
+            case FLYING_LEFT:
+                currentTexture = flyingLeftTexture;
+                break;
+
+            case FLYING_RIGHT:
+                currentTexture = flyingRightTexture;
                 break;
         }
 
