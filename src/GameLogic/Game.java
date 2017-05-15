@@ -11,6 +11,9 @@ public class Game
     public static final float GRAVITY = 9.82f;
     public static final int PIXELS_PER_METER = 50;
 
+    private static final float NANOSECONDS_PER_SECOND = 1000000000;
+    private static final float VSYNC_FPS = 60;
+
 
 
     private GameWindow window;
@@ -66,7 +69,7 @@ public class Game
 
         while (!window.shouldClose())
         {
-            deltaTime = (System.nanoTime() - lastTimeStamp) / 1000000000f;
+            deltaTime = (System.nanoTime() - lastTimeStamp) / NANOSECONDS_PER_SECOND;
             lastTimeStamp = System.nanoTime();
 
             java.util.List<GameObject> currentGameObjects = new ArrayList<>(gameObjectManager.getGameObjects());
@@ -80,6 +83,11 @@ public class Game
             }
 
             window.renderCanvas();
+
+            while (System.nanoTime() - lastTimeStamp < NANOSECONDS_PER_SECOND / VSYNC_FPS)
+            {
+
+            }
         }
 
         window.close();

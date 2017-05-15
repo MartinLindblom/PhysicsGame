@@ -2,6 +2,7 @@ package GameLogic.Flamman;
 
 import Engine.GameObject;
 import Engine.Vector;
+import GameLogic.Game;
 import GameLogic.Player;
 
 import java.awt.*;
@@ -13,7 +14,7 @@ public class FlammanLevel extends GameObject
     public void initialize()
     {
         instantiateGameObject(new FlammanHouse(new Vector(300, 456)));
-        instantiateGameObject(new Player(new Vector(10, 1)));
+        instantiateGameObject(new Player(new Vector(10, 144f / Game.PIXELS_PER_METER)));
     }
 
     @Override

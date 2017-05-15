@@ -42,4 +42,10 @@ public class Vector
 
         return this;
     }
+
+    @Override
+    public String toString()
+    {
+        return "(" + getX() + ", " + getY() + ")";
+    }
 }

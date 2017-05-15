@@ -17,18 +17,20 @@ enum PlayerState
     MOVING_LEFT_STANDING,
     MOVING_LEFT_RUNNING,
     MOVING_RIGHT_STANDING,
-    MOVING_RIGHT_RUNNING
+    MOVING_RIGHT_RUNNING,
+    FLYING_LEFT,
+    FLYING_RIGHT
 }
 
 
 
 public class Player extends GameObject
 {
-    private float DRAG_COEFFICIENT = 10f;
+    private float DRAG_COEFFICIENT = 7.75f;
     private float FRICTION_COEFFICIENT = 0.45f;
     private final float MASS = 70;
-    private float MOVEMENT_FORCE = 20f;
-    private float JUMP_FORCE = 25000;
+    private float MOVEMENT_FORCE = 425f;
+    private float JUMP_FORCE = 20500;
 
     private float increment = 0.01f;
 
@@ -157,6 +159,7 @@ public class Player extends GameObject
             isGrounded = false;
 
             fa.setY(JUMP_FORCE);
+            velocity.setY(0);
         }
 
         if (getGameState().isKeyUp(KeyEvent.VK_RIGHT) && getGameState().isKeyUp(KeyEvent.VK_LEFT))
@@ -217,6 +220,11 @@ public class Player extends GameObject
             increment -= 0.01f;
         }
 
+        if (getGameState().isKeyDown(KeyEvent.VK_P))
+        {
+            position = new Vector(10, 1);
+        }
+
         System.out.println(DRAG_COEFFICIENT + "     " + FRICTION_COEFFICIENT + "        " + MOVEMENT_FORCE + "      " + JUMP_FORCE + "      " + increment);
     }
 
@@ -224,16 +232,26 @@ public class Player extends GameObject
     {
         Vector fg = new Vector(0, MASS * -Game.GRAVITY);
         Vector fn = new Vector(0, 0);
+        Vector ff = new Vector(0, 0);
 
         if (isGrounded)
         {
             fn.setY(-fg.getY());
+
+            float negativeXDirection = (velocity.getX() != 0 ? -velocity.getX() / Math.abs(velocity.getX()) : 0);
+
+            ff = new Vector(FRICTION_COEFFICIENT * Math.abs(fn.getY()) * negativeXDirection, 0);
         }
 
-        float negativeXDirection = (fa.getX() != 0 ? -fa.getX() / fa.getX() : 0);
-
-        Vector ff = new Vector(FRICTION_COEFFICIENT * fn.getY() * negativeXDirection, 0);
         Vector fb = new Vector(-velocity.getX() * DRAG_COEFFICIENT, -velocity.getY() * DRAG_COEFFICIENT);
+
+        for (int i = 0; i < 12; i++)
+        {
+            System.out.println();
+        }
+
+        //System.out.printf("%-30s %-30s %-30s %-30s %-30s\n", "Acceleration", "Gravity", "Normal", "Friction", "Drag");
+        //System.out.printf("%-30s %-30s %-30s %-30s %-30s\n", fa, fg, fn, ff, fb);
 
         netForce = fa.add(fg.add(fn.add(ff.add(fb))));
     }
