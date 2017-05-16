@@ -2,6 +2,7 @@ package GameLogic.Physics;
 
 import Engine.GameState;
 import Engine.Vector;
+import GameLogic.Game;
 
 public class Formulas
 {
@@ -17,6 +18,6 @@ public class Formulas
 
     public static Vector cartesianToGraphical(Vector v, GameState gameState)
     {
-        return new Vector(v.getX(), gameState.getGameWindow().getHeight() - v.getY());
+        return new Vector(v.getX() * Game.PIXELS_PER_METER, gameState.getGameWindow().getHeight() - (v.getY() * Game.PIXELS_PER_METER));
     }
 }

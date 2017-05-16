@@ -11,6 +11,8 @@ public class Game
     public static final float GRAVITY = 9.82f;
     public static final int PIXELS_PER_METER = 50;
 
+    public static float scrollOffset = 0;
+
     private static final float NANOSECONDS_PER_SECOND = 1000000000;
     private static final float VSYNC_FPS = 60;
 
@@ -83,6 +85,8 @@ public class Game
             }
 
             window.renderCanvas();
+
+            gameObjectManager.checkCollisions();
 
             while (System.nanoTime() - lastTimeStamp < NANOSECONDS_PER_SECOND / VSYNC_FPS)
             {

@@ -1,5 +1,7 @@
 package Engine;
 
+import GameLogic.Physics.Collider;
+
 import java.awt.*;
 
 public abstract class GameObject
@@ -34,6 +36,11 @@ public abstract class GameObject
     public void instantiateGameObject(GameObject gameObject)
     {
         gameObject.register(getGameObjectManager());
+    }
+
+    public void instantiateCollider(Collider collider)
+    {
+        getGameObjectManager().registerCollider(collider);
     }
 
 

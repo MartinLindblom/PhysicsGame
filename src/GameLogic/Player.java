@@ -3,6 +3,7 @@ package GameLogic;
 import Engine.AssetLoader;
 import Engine.GameObject;
 import Engine.Vector;
+import GameLogic.Physics.Collider;
 import GameLogic.Physics.Formulas;
 
 import java.awt.*;
@@ -26,13 +27,11 @@ enum PlayerState
 
 public class Player extends GameObject
 {
-    private float DRAG_COEFFICIENT = 7.75f;
-    private float FRICTION_COEFFICIENT = 0.45f;
-    private final float MASS = 70;
-    private float MOVEMENT_FORCE = 425f;
-    private float JUMP_FORCE = 20500;
-
-    private float increment = 0.01f;
+    private static final float DRAG_COEFFICIENT = 7.75f;
+    private static final float FRICTION_COEFFICIENT = 0.45f;
+    private static final float MASS = 70;
+    private static final float MOVEMENT_FORCE = 425f;
+    private static final float JUMP_FORCE = 23000;
 
     private BufferedImage currentTexture;
     private BufferedImage runLeftTexture;
@@ -54,6 +53,8 @@ public class Player extends GameObject
 
     private float animationElapsedTime;
     private float animationFrameDuration;
+
+    private Collider collider;
 
 
 
@@ -84,6 +85,8 @@ public class Player extends GameObject
         flyingRightTexture = AssetLoader.loadImage("RightJumping.png");
 
         currentTexture = standRightTexture;
+
+        instantiateCollider(collider = new Collider(new Vector(position.getX(), position.getY()), new Vector(currentTexture.getWidth(), currentTexture.getHeight()), false));
     }
 
     @Override
@@ -91,20 +94,19 @@ public class Player extends GameObject
     {
         fa = new Vector(0, 0);
 
-        if (position.getY() < 144 / Game.PIXELS_PER_METER)
+        if (position.getY() < 144f / Game.PIXELS_PER_METER)
         {
-            position.setY(144 / Game.PIXELS_PER_METER);
+            position.setY(144f / Game.PIXELS_PER_METER);
             isGrounded = true;
         }
 
         checkInputs();
         calculateForces();
         updatePosition(deltaTime);
+        updateTexture(deltaTime);
 
-        if (state != PlayerState.STANDING_STILL)
-        {
-            updateTexture(deltaTime);
-        }
+        collider.updatePosition(new Vector(position.getX() + ((getGameState().getGameWindow().getWidth() / 2f) / Game.PIXELS_PER_METER), position.getY()));
+        collider.setSize(new Vector(currentTexture.getWidth(), currentTexture.getHeight()));
     }
 
     @Override
@@ -137,9 +139,11 @@ public class Player extends GameObject
                 break;
         }
 
-        Vector graphicalPosition = Formulas.cartesianToGraphical(new Vector(position.getX() * Game.PIXELS_PER_METER, position.getY() * Game.PIXELS_PER_METER), getGameState());
+        Vector graphicalPosition = Formulas.cartesianToGraphical(new Vector((getGameState().getGameWindow().getWidth() / 2f) / Game.PIXELS_PER_METER, position.getY()), getGameState());
 
         g.drawImage(currentTexture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
+
+        collider.draw(g, Color.green, false, getGameState());
     }
 
 
@@ -178,66 +182,12 @@ public class Player extends GameObject
         {
             if (getGameState().isKeyUp(KeyEvent.VK_SPACE))
             {
-                state = PlayerState.STANDING_STILL;
+                if (state != PlayerState.FLYING_LEFT && state != PlayerState.FLYING_RIGHT)
+                {
+                    state = PlayerState.STANDING_STILL;
+                }
             }
         }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_1))
-        {
-            DRAG_COEFFICIENT += increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_Q))
-        {
-            DRAG_COEFFICIENT -= increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_2))
-        {
-            FRICTION_COEFFICIENT += increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_W))
-        {
-            FRICTION_COEFFICIENT -= increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_3))
-        {
-            MOVEMENT_FORCE += increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_E))
-        {
-            MOVEMENT_FORCE -= increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_4))
-        {
-            JUMP_FORCE += increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_R))
-        {
-            JUMP_FORCE -= increment;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_5))
-        {
-            increment += 0.01f;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_T))
-        {
-            increment -= 0.01f;
-        }
-
-        if (getGameState().isKeyDown(KeyEvent.VK_P))
-        {
-            position = new Vector(10, 1);
-        }
-
-        System.out.println(DRAG_COEFFICIENT + "     " + FRICTION_COEFFICIENT + "        " + MOVEMENT_FORCE + "      " + JUMP_FORCE + "      " + increment);
     }
 
     private void calculateForces()
@@ -257,14 +207,6 @@ public class Player extends GameObject
 
         Vector fb = new Vector(-velocity.getX() * DRAG_COEFFICIENT, -velocity.getY() * DRAG_COEFFICIENT);
 
-        for (int i = 0; i < 12; i++)
-        {
-            System.out.println();
-        }
-
-        //System.out.printf("%-30s %-30s %-30s %-30s %-30s\n", "Acceleration", "Gravity", "Normal", "Friction", "Drag");
-        //System.out.printf("%-30s %-30s %-30s %-30s %-30s\n", fa, fg, fn, ff, fb);
-
         netForce = fa.add(fg.add(fn.add(ff.add(fb))));
     }
 
@@ -275,32 +217,66 @@ public class Player extends GameObject
         position.add(Formulas.calculateDisplacement(velocity, acceleration, deltaTime));
 
         velocity.add(new Vector(acceleration.getX() * deltaTime, acceleration.getY() * deltaTime));
+
+        Game.scrollOffset = position.getX();
     }
 
     private void updateTexture(float deltaTime)
     {
         animationElapsedTime += deltaTime;
 
-        if (animationElapsedTime > animationFrameDuration)
+        if (isGrounded)
         {
-            animationElapsedTime = 0;
+            if (animationElapsedTime > animationFrameDuration)
+            {
+                animationElapsedTime = 0;
 
+                switch (state)
+                {
+                    case MOVING_LEFT_STANDING:
+                        state = PlayerState.MOVING_LEFT_RUNNING;
+                        break;
+
+                    case MOVING_LEFT_RUNNING:
+                        state = PlayerState.MOVING_LEFT_STANDING;
+                        break;
+
+                    case MOVING_RIGHT_STANDING:
+                        state = PlayerState.MOVING_RIGHT_RUNNING;
+                        break;
+
+                    case MOVING_RIGHT_RUNNING:
+                        state = PlayerState.MOVING_RIGHT_STANDING;
+                        break;
+
+                    case FLYING_LEFT:
+                        state = PlayerState.MOVING_LEFT_STANDING;
+                        break;
+
+                    case FLYING_RIGHT:
+                        state = PlayerState.MOVING_RIGHT_STANDING;
+                        break;
+                }
+            }
+        }
+        else
+        {
             switch (state)
             {
                 case MOVING_LEFT_STANDING:
-                    state = PlayerState.MOVING_LEFT_RUNNING;
+                    state = PlayerState.FLYING_LEFT;
                     break;
 
                 case MOVING_LEFT_RUNNING:
-                    state = PlayerState.MOVING_LEFT_STANDING;
+                    state = PlayerState.FLYING_LEFT;
                     break;
 
                 case MOVING_RIGHT_STANDING:
-                    state = PlayerState.MOVING_RIGHT_RUNNING;
+                    state = PlayerState.FLYING_RIGHT;
                     break;
 
                 case MOVING_RIGHT_RUNNING:
-                    state = PlayerState.MOVING_RIGHT_STANDING;
+                    state = PlayerState.FLYING_RIGHT;
                     break;
             }
         }
