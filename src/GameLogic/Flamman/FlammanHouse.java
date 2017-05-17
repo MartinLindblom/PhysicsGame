@@ -3,8 +3,7 @@ package GameLogic.Flamman;
 import Engine.AssetLoader;
 import Engine.GameObject;
 import Engine.Vector;
-import GameLogic.Game;
-import GameLogic.Physics.Formulas;
+import GameLogic.Helper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -36,7 +35,7 @@ public class FlammanHouse extends GameObject
     @Override
     public void render(Graphics2D g)
     {
-        Vector graphicalPosition = Formulas.cartesianToGraphical(new Vector(position.getX() - Game.scrollOffset, position.getY()), getGameState());
+        Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), getGameState());
 
         g.drawImage(texture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
     }

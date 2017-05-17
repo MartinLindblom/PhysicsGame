@@ -1,14 +1,18 @@
 package GameLogic.Physics;
 
+import Engine.GameObject;
 import Engine.GameState;
 import Engine.Vector;
 import GameLogic.Game;
+import GameLogic.Helper;
 
 import java.awt.*;
 
 
 public class Collider
 {
+    private GameObject parent;
+
     private Vector position;
     private Vector size;
 
@@ -18,18 +22,33 @@ public class Collider
 
 
 
-    public Collider(Vector startPosition, Vector _size, boolean _isStatic)
+    public Collider(Vector startPosition, Vector _size, boolean _isStatic, GameObject _parent)
     {
+        parent = _parent;
+
         position = startPosition;
         size = _size;
+
         isStatic = _isStatic;
+
+        collisionVector = new Vector(0, 0);
     }
 
 
 
+    public GameObject getParent()
+    {
+        return parent;
+    }
+
     public boolean isStatic()
     {
         return isStatic;
+    }
+
+    public Vector getCollisionVector()
+    {
+        return collisionVector;
     }
 
     public float getWidth()
@@ -44,7 +63,7 @@ public class Collider
 
     public Vector getCenter()
     {
-        return new Vector((position.getX() + size.getX()) / 2f, (position.getY() + size.getY()) / 2f);
+        return new Vector(position.getX() + ((size.getX() / 2f) / Game.PIXELS_PER_METER), position.getY() + ((size.getY() / 2f) / Game.PIXELS_PER_METER));
     }
 
     public void setCollisionVector(Vector v)
@@ -56,38 +75,42 @@ public class Collider
 
     public void checkCollision(Collider other)
     {
-        float depthX = ((getWidth() / 2f) + (other.getWidth() / 2f)) - Math.abs(getCenter().getX() - other.getCenter().getX());
-        float depthY = ((getHeight() / 2f) + (other.getHeight() / 2f)) - Math.abs(getCenter().getY() - other.getCenter().getY());
+        Vector displacement = new Vector(0, 0);
 
-        System.out.println(depthX);
+        float deltaX = Math.abs(getCenter().getX() - other.getCenter().getX());
+        float deltaY = Math.abs(getCenter().getY() - other.getCenter().getY());
 
-        if (depthX <= 0 || depthY <= 0)
+        float totalWidth = ((getWidth() / 2f) + (other.getWidth() / 2f)) / Game.PIXELS_PER_METER;
+        float totalHeight = ((getHeight() / 2f) + (other.getHeight() / 2f)) / Game.PIXELS_PER_METER;
+
+        if ((deltaX < totalWidth) && (deltaY < totalHeight))
         {
-            System.out.println("Collision!");
-
-            Vector depthVector = new Vector(0, 0);
-
-            if (getCenter().getX() < other.getCenter().getX())
+            if ((totalWidth - deltaX) < (totalHeight - deltaY))
             {
-                depthVector.setX(-depthX);
+                if (getCenter().getX() < other.getCenter().getX())
+                {
+                    displacement.setX(-(totalWidth - deltaX));
+                }
+                else
+                {
+                    displacement.setX(totalWidth - deltaX);
+                }
             }
             else
             {
-                depthVector.setX(depthX);
+                if (getCenter().getY() < other.getCenter().getY())
+                {
+                    displacement.setY(-(totalHeight - deltaY));
+                }
+                else
+                {
+                    displacement.setY(totalHeight - deltaY);
+                }
             }
-
-            if (getCenter().getY() < other.getCenter().getY())
-            {
-                depthVector.setY(-depthY);
-            }
-            else
-            {
-                depthVector.setY(depthY);
-            }
-
-            setCollisionVector(depthVector);
-            other.setCollisionVector(depthVector.invert());
         }
+
+        setCollisionVector(displacement);
+        other.setCollisionVector(new Vector(-displacement.getX(), -displacement.getY()));
     }
 
 
@@ -106,15 +129,15 @@ public class Collider
     {
         g.setColor(color);
 
-        Vector graphicalPosition = Formulas.cartesianToGraphical(new Vector(position.getX() - Game.scrollOffset, position.getY()), gameState);
+        Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), gameState);
 
         if (filled)
         {
-            g.drawRect((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)size.getX(), (int)size.getY());
+            g.fillRect((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)size.getX(), (int)size.getY());
         }
         else
         {
-            g.fillRect((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)size.getX(), (int)size.getY());
+            g.drawRect((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)size.getX(), (int)size.getY());
         }
 
         g.setColor(Color.BLACK);

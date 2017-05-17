@@ -94,12 +94,18 @@ public class GameObjectManager
         {
             for (Collider sc : staticColliders)
             {
-                colliders.get(i).checkCollision(sc);
+                if (colliders.get(i).getParent() != sc.getParent())
+                {
+                    colliders.get(i).checkCollision(sc);
+                }
             }
 
             for (int j = (i + 1); j < colliders.size(); j++)
             {
-                colliders.get(i).checkCollision(colliders.get(j));
+                if (colliders.get(i).getParent() != colliders.get(j).getParent())
+                {
+                    colliders.get(i).checkCollision(colliders.get(j));
+                }
             }
         }
     }

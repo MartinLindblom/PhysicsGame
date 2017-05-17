@@ -15,8 +15,8 @@ public class FlammanLevel extends GameObject
     public void initialize()
     {
         instantiateGameObject(new FlammanHouse(new Vector(300f / Game.PIXELS_PER_METER, 412f / Game.PIXELS_PER_METER)));
-        instantiateGameObject(new Player(new Vector(0, 144f / Game.PIXELS_PER_METER)));
-        instantiateGameObject(new BoxOne(new Vector(0, 132f / Game.PIXELS_PER_METER)));
+        instantiateGameObject(new Player(new Vector(0f, 256f / Game.PIXELS_PER_METER)));
+        instantiateGameObject(new BoxOne(new Vector(0f, (72f + 60f) / Game.PIXELS_PER_METER)));
     }
 
     @Override

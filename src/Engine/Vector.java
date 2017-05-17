@@ -43,14 +43,6 @@ public class Vector
         return this;
     }
 
-    public Vector invert()
-    {
-        setX(-getX());
-        setY(-getY());
-
-        return this;
-    }
-
     @Override
     public String toString()
     {

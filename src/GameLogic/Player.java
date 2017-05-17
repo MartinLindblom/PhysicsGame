@@ -27,11 +27,13 @@ enum PlayerState
 
 public class Player extends GameObject
 {
-    private static final float DRAG_COEFFICIENT = 7.75f;
-    private static final float FRICTION_COEFFICIENT = 0.45f;
-    private static final float MASS = 70;
-    private static final float MOVEMENT_FORCE = 425f;
-    private static final float JUMP_FORCE = 23000;
+    private final float DRAG_COEFFICIENT = 7.75f;
+    private final float FRICTION_COEFFICIENT = 0.45f;
+    private final float MASS = 70;
+    private final float MOVEMENT_FORCE = 425f;
+    private final float JUMP_FORCE = 23000;
+    private final float ANIMATION_FRAME_DURATION = 0.2f;
+    private final float GROUND_DETECTOR_HEIGHT = 20f;
 
     private BufferedImage currentTexture;
     private BufferedImage runLeftTexture;
@@ -52,9 +54,9 @@ public class Player extends GameObject
     private boolean isGrounded;
 
     private float animationElapsedTime;
-    private float animationFrameDuration;
 
     private Collider collider;
+    private Collider groundDetector;
 
 
 
@@ -68,10 +70,9 @@ public class Player extends GameObject
         acceleration = new Vector(0, 0);
 
         state = PlayerState.MOVING_RIGHT_STANDING;
-        isGrounded = true;
+        isGrounded = false;
 
         animationElapsedTime = 0;
-        animationFrameDuration = 0.2f;
     }
 
     @Override
@@ -86,7 +87,8 @@ public class Player extends GameObject
 
         currentTexture = standRightTexture;
 
-        instantiateCollider(collider = new Collider(new Vector(position.getX(), position.getY()), new Vector(currentTexture.getWidth(), currentTexture.getHeight()), false));
+        instantiateCollider(collider = new Collider(new Vector(position.getX(), position.getY()), new Vector(standRightTexture.getWidth(), currentTexture.getHeight()), false, this));
+        instantiateCollider(groundDetector = new Collider(new Vector(position.getX(), position.getY() - standRightTexture.getHeight()), new Vector(standRightTexture.getWidth(), GROUND_DETECTOR_HEIGHT), false, this));
     }
 
     @Override
@@ -94,19 +96,11 @@ public class Player extends GameObject
     {
         fa = new Vector(0, 0);
 
-        if (position.getY() < 144f / Game.PIXELS_PER_METER)
-        {
-            position.setY(144f / Game.PIXELS_PER_METER);
-            isGrounded = true;
-        }
-
         checkInputs();
         calculateForces();
         updatePosition(deltaTime);
+        checkCollisions();
         updateTexture(deltaTime);
-
-        collider.updatePosition(new Vector(position.getX() + ((getGameState().getGameWindow().getWidth() / 2f) / Game.PIXELS_PER_METER), position.getY()));
-        collider.setSize(new Vector(currentTexture.getWidth(), currentTexture.getHeight()));
     }
 
     @Override
@@ -139,11 +133,8 @@ public class Player extends GameObject
                 break;
         }
 
-        Vector graphicalPosition = Formulas.cartesianToGraphical(new Vector((getGameState().getGameWindow().getWidth() / 2f) / Game.PIXELS_PER_METER, position.getY()), getGameState());
-
+        Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), getGameState());
         g.drawImage(currentTexture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
-
-        collider.draw(g, Color.green, false, getGameState());
     }
 
 
@@ -221,13 +212,41 @@ public class Player extends GameObject
         Game.scrollOffset = position.getX();
     }
 
+    private void checkCollisions()
+    {
+        collider.updatePosition(new Vector(position.getX(), position.getY()));
+        collider.setSize(new Vector(currentTexture.getWidth(), standRightTexture.getHeight()));
+
+        groundDetector.updatePosition(new Vector(position.getX(), position.getY() - ((float)standRightTexture.getHeight() / Game.PIXELS_PER_METER)));
+
+        System.out.println(groundDetector.getCenter());
+        position.add(collider.getCollisionVector());
+
+        if (collider.getCollisionVector().getY() != 0 && velocity.getY() < 0)
+        {
+            velocity.setY(0);
+            isGrounded = true;
+        }
+
+        if (groundDetector.getCollisionVector().getY() == 0 && isGrounded)
+        {
+            isGrounded = false;
+        }
+
+        if (position.getY() < 144f / Game.PIXELS_PER_METER)
+        {
+            position.setY(144f / Game.PIXELS_PER_METER);
+            isGrounded = true;
+        }
+    }
+
     private void updateTexture(float deltaTime)
     {
         animationElapsedTime += deltaTime;
 
         if (isGrounded)
         {
-            if (animationElapsedTime > animationFrameDuration)
+            if (animationElapsedTime > ANIMATION_FRAME_DURATION)
             {
                 animationElapsedTime = 0;
 
