@@ -42,7 +42,7 @@ public class GameWindow
 
         bufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-        backgroundColor = new Color(0, 203, 255);
+        backgroundColor = new Color(0, 0, 0);
     }
 
 

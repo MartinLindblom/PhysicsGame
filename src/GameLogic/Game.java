@@ -86,8 +86,6 @@ public class Game
 
             window.renderCanvas();
 
-            gameObjectManager.checkCollisions();
-
             while (System.nanoTime() - lastTimeStamp < NANOSECONDS_PER_SECOND / VSYNC_FPS)
             {
 

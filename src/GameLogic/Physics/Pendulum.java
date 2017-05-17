@@ -3,6 +3,7 @@ package GameLogic.Physics;
 import Engine.GameObject;
 import Engine.Vector;
 import GameLogic.Game;
+import GameLogic.Helper;
 
 import java.awt.*;
 
@@ -35,12 +36,15 @@ public class Pendulum extends GameObject
     @Override
     public void update(float deltaTime)
     {
-        angularAcceleration = (float)((-Game.GRAVITY / length) * Math.sin(angle));
-        angularVelocity += angularAcceleration * deltaTime;
+        if (Game.scrollOffset > topPoint.getX() - 12f)
+        {
+            angularAcceleration = (float) ((-Game.GRAVITY / length) * Math.sin(angle));
+            angularVelocity += angularAcceleration * deltaTime;
 
-        angularVelocity *= dampening;
+            angularVelocity *= dampening;
 
-        angle += (angularVelocity) * deltaTime;
+            angle += (angularVelocity) * deltaTime;
+        }
     }
 
     @Override
@@ -51,7 +55,9 @@ public class Pendulum extends GameObject
         float newX = (float)(Math.sin(angle) * (length * Game.PIXELS_PER_METER));
         float newY = (float)(Math.cos(angle) * (length * Game.PIXELS_PER_METER));
 
-        g.drawLine((int)topPoint.getX(), (int)topPoint.getY(), (int)(topPoint.getX() + newX), (int)(topPoint.getY() + newY));
+        Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(topPoint.getX(), topPoint.getY()), getGameState());
+
+        g.drawLine((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)(graphicalPosition.getX() + newX), (int)(graphicalPosition.getY() + newY));
 
         g.setStroke(new BasicStroke(1));
     }
@@ -60,6 +66,6 @@ public class Pendulum extends GameObject
 
     public Vector getSwingPoint()
     {
-        return new Vector((float)(topPoint.getX() + Math.sin(angle) * (length * Game.PIXELS_PER_METER)), (float)(topPoint.getY() + Math.cos(angle) * (length * Game.PIXELS_PER_METER)));
+        return new Vector((float)(topPoint.getX() + Math.sin(angle) * length), (float)(topPoint.getY() - Math.cos(angle) * length));
     }
 }
