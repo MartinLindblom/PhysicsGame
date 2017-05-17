@@ -6,6 +6,7 @@ import Engine.Vector;
 import GameLogic.Physics.Collider;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class BoxOne extends GameObject
@@ -14,6 +15,8 @@ public class BoxOne extends GameObject
     private BufferedImage texture;
 
     private Collider collider;
+
+    private float size = 36f;
 
 
 
@@ -33,6 +36,19 @@ public class BoxOne extends GameObject
     public void update(float deltaTime)
     {
         collider.updatePosition(new Vector(position.getX(), position.getY()));
+        collider.setSize(new Vector(size, size));
+
+        if (getGameState().isKeyDown(KeyEvent.VK_1))
+        {
+            size += 0.1f;
+        }
+
+        if (getGameState().isKeyDown(KeyEvent.VK_Q))
+        {
+            size -= 0.1f;
+        }
+
+        System.out.println(size);
     }
 
     @Override
@@ -40,6 +56,6 @@ public class BoxOne extends GameObject
     {
         Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), getGameState());
         g.drawImage(texture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
-        //collider.draw(g, Color.cyan, false, getGameState());
+        collider.draw(g, Color.cyan, false, getGameState());
     }
 }
