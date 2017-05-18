@@ -47,6 +47,7 @@ public class Player extends GameObject
     private Vector position;
 
     private List<CollisionPlatform> collisionPlatforms;
+    private List<Muffin> muffins;
 
     private Vector netForce;
     private Vector fa;
@@ -60,11 +61,12 @@ public class Player extends GameObject
 
 
 
-    public Player(Vector startPosition, List<CollisionPlatform> _collisionPlatforms)
+    public Player(Vector startPosition, List<CollisionPlatform> _collisionPlatforms, List<Muffin> _muffins)
     {
         position = startPosition;
 
         collisionPlatforms = new ArrayList<>(_collisionPlatforms);
+        muffins = new ArrayList<>(_muffins);
 
         netForce = new Vector(0, 0);
         fa = new Vector(0, 0);
@@ -230,6 +232,19 @@ public class Player extends GameObject
             {
                 position.setY(ca.getTop() + ((float)standRightTexture.getHeight() / Game.PIXELS_PER_METER));
                 isGrounded = true;
+            }
+        }
+
+        for (Muffin m : muffins)
+        {
+            if (!m.isHidden())
+            {
+                if (m.isColliding(position, new Vector((float) standRightTexture.getWidth() / Game.PIXELS_PER_METER, (float) standRightTexture.getHeight() / Game.PIXELS_PER_METER)))
+                {
+                    System.out.println("Colliding");
+                    m.hide();
+                    Game.points++;
+                }
             }
         }
 

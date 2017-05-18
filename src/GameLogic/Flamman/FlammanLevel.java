@@ -24,6 +24,8 @@ public class FlammanLevel extends GameObject
         backgroundPosition = new Vector(-700f / Game.PIXELS_PER_METER, (float)background.getHeight() / Game.PIXELS_PER_METER);
 
         List<CollisionPlatform> collisionPlatforms = new ArrayList<>();
+        List<Muffin> muffins = new ArrayList<>();
+
         collisionPlatforms.add(new CollisionPlatform(new Vector(1.96f, 1.58f), new Vector(0.72f, 0.2f)));
 
         for (int i = 0; i < 7; i++)
@@ -59,22 +61,37 @@ public class FlammanLevel extends GameObject
 
 
 
-        instantiateGameObject(new Muffin(new Vector(4.2f, 11.82f)));
-        instantiateGameObject(new Muffin(new Vector(21.14f, 1.44f)));
-        instantiateGameObject(new Muffin(new Vector(37.4f, 8.4f)));
-        instantiateGameObject(new Muffin(new Vector(43.74f, 8.9f)));
-        instantiateGameObject(new Muffin(new Vector(47.74f, 11.1f)));
-        instantiateGameObject(new Muffin(new Vector(51.62f, 6.6f)));
-        instantiateGameObject(new Muffin(new Vector(65.24f, 5.22f)));
-        instantiateGameObject(new Muffin(new Vector(75.4f, 6.86f)));
-        instantiateGameObject(new Muffin(new Vector(79.72f, 8.32f)));
+        Muffin muffinObject;
 
-        instantiateGameObject(new MuffinPendulum(new Vector(88.82f, 12.32f)));
+        instantiateGameObject(muffinObject = new Muffin(new Vector(4.2f, 11.82f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(21.14f, 1.44f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(37.4f, 8.4f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(43.74f, 8.9f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(47.74f, 11.1f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(50.62f, 6.6f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(65.24f, 5.22f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(75.4f, 6.86f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(79.72f, 8.32f)));
+        muffins.add(muffinObject);
 
-        instantiateGameObject(new Muffin(new Vector(99.98f, 6.06f)));
-        instantiateGameObject(new Muffin(new Vector(114.1f, 6.06f)));
+        MuffinPendulum muffinPendulum;
+        instantiateGameObject(muffinPendulum = new MuffinPendulum(new Vector(88.82f, 12.32f)));
+        muffins.add(muffinPendulum.getMuffin());
 
-        instantiateGameObject(new Player(new Vector(0f, (42f + 84f) / Game.PIXELS_PER_METER), collisionPlatforms));
+        instantiateGameObject(muffinObject = new Muffin(new Vector(99.98f, 6.06f)));
+        muffins.add(muffinObject);
+        instantiateGameObject(muffinObject = new Muffin(new Vector(114.1f, 6.06f)));
+        muffins.add(muffinObject);
+
+        instantiateGameObject(new Player(new Vector(0f, (42f + 84f) / Game.PIXELS_PER_METER), collisionPlatforms, muffins));
     }
 
     @Override
@@ -88,5 +105,8 @@ public class FlammanLevel extends GameObject
     {
         Vector graphicalPosition = Helper.cartesianToGraphical(backgroundPosition, getGameState());
         g.drawImage(background, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
+
+        g.setFont(new Font("Arial", Font.BOLD, 50));
+        g.drawString(String.valueOf(Game.points), 50, 50);
     }
 }

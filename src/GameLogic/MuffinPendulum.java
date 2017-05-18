@@ -22,6 +22,13 @@ public class MuffinPendulum extends GameObject
 
 
 
+    public Muffin getMuffin()
+    {
+        return muffin;
+    }
+
+
+
     @Override
     public void initialize()
     {

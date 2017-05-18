@@ -13,6 +13,8 @@ public class Game
 
     public static float scrollOffset = 0;
 
+    public static int points = 0;
+
     private static final float NANOSECONDS_PER_SECOND = 1000000000;
     private static final float VSYNC_FPS = 60;
 
