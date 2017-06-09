@@ -1,15 +1,17 @@
-package GameLogic.Flamman;
+package GameLogic;
 
 import Engine.AssetLoader;
 import Engine.GameObject;
 import Engine.Vector;
-import GameLogic.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used to set up the level on which the player moves and interacts.
+ */
 public class FlammanLevel extends GameObject
 {
     private BufferedImage background;
@@ -26,7 +28,9 @@ public class FlammanLevel extends GameObject
     }
 
 
-
+    /**
+     * Initializes all the images, muffins and collision platforms as well as the player.
+     */
     @Override
     public void initialize()
     {
@@ -104,6 +108,11 @@ public class FlammanLevel extends GameObject
         instantiateGameObject(player = new Player(new Vector(0f, (42f + 84f) / Game.PIXELS_PER_METER), collisionPlatforms, muffins));
     }
 
+    /**
+     * Checks if the player has reached the end and also if the timer has run out.
+     * If the timer has run out the player loses and if the player reaches the goal in time the player wins.
+     * @param deltaTime The time that has passed since the last update call.
+     */
     @Override
     public void update(float deltaTime)
     {
@@ -122,6 +131,10 @@ public class FlammanLevel extends GameObject
         }
     }
 
+    /**
+     * Draws the timer, background and score to the screen.
+     * @param g Graphics object used in order to draw to the canvas.
+     */
     @Override
     public void render(Graphics2D g)
     {

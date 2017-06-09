@@ -1,11 +1,13 @@
 package GameLogic;
 
 import Engine.*;
-import GameLogic.Flamman.FlammanLevel;
 
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * The main game handler, starts and ends the game. Runs the game loop.
+ */
 public class Game
 {
     public static final float GRAVITY = 9.82f;
@@ -29,7 +31,12 @@ public class Game
     private long lastTimeStamp;
 
 
-
+    /**
+     * Create the {@link GameWindow}, {@link InputManager}, {@link GameState}, {@link GameObjectManager} and the "root" {@link GameObject}.
+     * @param windowWidth Width of the canvas
+     * @param windowHeight Height of the canvas
+     * @param windowTitle Title of window
+     */
     public Game(int windowWidth, int windowHeight, String windowTitle)
     {
         window = new GameWindow(windowWidth, windowHeight, windowTitle);
@@ -68,7 +75,9 @@ public class Game
     }
 
 
-
+    /**
+     * Runs the game-loop and sends calls to update and render all game objects at a steady frame rate.
+     */
     public void run()
     {
         float deltaTime;

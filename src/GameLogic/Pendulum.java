@@ -1,12 +1,13 @@
-package GameLogic.Physics;
+package GameLogic;
 
 import Engine.GameObject;
 import Engine.Vector;
-import GameLogic.Game;
-import GameLogic.Helper;
 
 import java.awt.*;
 
+/**
+ * Used to create a pendulum.
+ */
 public class Pendulum extends GameObject
 {
     private Vector topPoint;
@@ -17,7 +18,14 @@ public class Pendulum extends GameObject
     private float dampening;
 
 
-
+    /**
+     * Creates a pendulum from starting values.
+     * @param fixedPosition The point about which it will swing
+     * @param _length The length of the pendulum
+     * @param startAngle The angle at which it will start.
+     * @param _dampening The dampening ("air resistance") that slows down the pendulum
+     * @param initialVelocity Starting velocity of the pendulum.
+     */
     public Pendulum(Vector fixedPosition, float _length, float startAngle, float _dampening, float initialVelocity)
     {
         topPoint = fixedPosition;
@@ -33,6 +41,10 @@ public class Pendulum extends GameObject
 
     }
 
+    /**
+     * Updates the angle at which the pendulum is.
+     * @param deltaTime The time that has passed since the last update call.
+     */
     @Override
     public void update(float deltaTime)
     {
@@ -47,6 +59,10 @@ public class Pendulum extends GameObject
         }
     }
 
+    /**
+     * Draws the pendulum to the screen.
+     * @param g Graphics object used in order to draw to the canvas.
+     */
     @Override
     public void render(Graphics2D g)
     {

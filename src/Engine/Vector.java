@@ -1,5 +1,8 @@
 package Engine;
 
+/**
+ * Class that acts as a vector.
+ */
 public class Vector
 {
     private float x;
@@ -35,6 +38,11 @@ public class Vector
         y = value;
     }
 
+    /**
+     * Adds another vector to this one.
+     * @param v Vector to add
+     * @return This vector. Can be used to chain add.
+     */
     public Vector add(Vector v)
     {
         setX(getX() + v.getX());

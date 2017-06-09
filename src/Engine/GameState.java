@@ -1,5 +1,8 @@
 package Engine;
 
+/**
+ * Used to keep track and pass around data about the game state.
+ */
 public class GameState
 {
     private GameWindow gameWindow;
@@ -29,18 +32,23 @@ public class GameState
 
 
 
+    /**
+     * Returns true if passed key is down.
+     * @param keyCode The keycode of desired key to check.
+     * @return True if key is down else false.
+     */
     public boolean isKeyDown(int keyCode)
     {
         return getInputManager().getKeyState(keyCode) == KeyState.HELD || getInputManager().getKeyState(keyCode) == KeyState.PRESSED;
     }
 
+    /**
+     * Returns true if passed key is up.
+     * @param keyCode The keycode of desired key to check.
+     * @return True if key is up else false;
+     */
     public boolean isKeyUp(int keyCode)
     {
         return getInputManager().getKeyState(keyCode) == KeyState.RELEASED;
-    }
-
-    public boolean isKeyPressed(int keyCode)
-    {
-        return getInputManager().getKeyState(keyCode) == KeyState.PRESSED;
     }
 }

@@ -3,7 +3,6 @@ package GameLogic;
 import Engine.AssetLoader;
 import Engine.GameObject;
 import Engine.Vector;
-import GameLogic.Physics.Formulas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,9 @@ import java.awt.image.BufferedImage;
 
 
 
+/**
+ * All possible states of the player.
+ */
 enum PlayerState
 {
     STANDING_STILL,
@@ -26,7 +28,9 @@ enum PlayerState
 }
 
 
-
+/**
+ * Creates a fully controllable player that can jump and move.
+ */
 public class Player extends GameObject
 {
     private final float DRAG_COEFFICIENT = 7.75f;
@@ -60,7 +64,12 @@ public class Player extends GameObject
     private float animationElapsedTime;
 
 
-
+    /**
+     * Create the player and set the start position as well as initialize all variables.
+     * @param startPosition Where to start.
+     * @param _collisionPlatforms A list of all the platforms that the player can stand on.
+     * @param _muffins A list of all the muffins that the player can collect.
+     */
     public Player(Vector startPosition, List<CollisionPlatform> _collisionPlatforms, List<Muffin> _muffins)
     {
         position = startPosition;
@@ -84,6 +93,9 @@ public class Player extends GameObject
         return position;
     }
 
+    /**
+     * Load all textures
+     */
     @Override
     public void initialize()
     {
@@ -97,6 +109,10 @@ public class Player extends GameObject
         currentTexture = standRightTexture;
     }
 
+    /**
+     * Update everything that need  to be updated.
+     * @param deltaTime The time that has passed since the last update call.
+     */
     @Override
     public void update(float deltaTime)
     {
@@ -109,6 +125,10 @@ public class Player extends GameObject
         updateTexture(deltaTime);
     }
 
+    /**
+     * Draw the player using the appropriate texture depending on in which state the player is in.
+     * @param g Graphics object used in order to draw to the canvas.
+     */
     @Override
     public void render(Graphics2D g)
     {
@@ -139,6 +159,9 @@ public class Player extends GameObject
                 break;
         }
 
+        /**
+         * Draw all the platforms as black blocks
+         */
         for (CollisionPlatform ca : collisionPlatforms)
         {
             g.setColor(Color.BLACK);
@@ -150,7 +173,9 @@ public class Player extends GameObject
     }
 
 
-
+    /**
+     * Check what keys are pressed and act accordingly.
+     */
     private void checkInputs()
     {
         if (getGameState().isKeyDown(KeyEvent.VK_RIGHT) && isGrounded)
@@ -193,6 +218,9 @@ public class Player extends GameObject
         }
     }
 
+    /**
+     * Calculate all the forces that are acting on the player and from these get a net force used to move the player.
+     */
     private void calculateForces()
     {
         Vector fg = new Vector(0, MASS * -Game.GRAVITY);
@@ -213,6 +241,10 @@ public class Player extends GameObject
         netForce = fa.add(fg.add(fn.add(ff.add(fb))));
     }
 
+    /**
+     * Update the players position.
+     * @param deltaTime Time that has passed since the last update.
+     */
     private void updatePosition(float deltaTime)
     {
         acceleration = new Vector(netForce.getX() / MASS, netForce.getY() / MASS);
@@ -224,6 +256,9 @@ public class Player extends GameObject
         Game.scrollOffset = position.getX();
     }
 
+    /**
+     * Check weather the player is colliding with a platform or not. And if the player is move the player up.
+     */
     private void checkCollisions()
     {
         isGrounded = false;
@@ -258,6 +293,10 @@ public class Player extends GameObject
         }
     }
 
+    /**
+     * Update the texture if needed in order to have animations.
+     * @param deltaTime Time passed since last update.
+     */
     private void updateTexture(float deltaTime)
     {
         animationElapsedTime += deltaTime;
