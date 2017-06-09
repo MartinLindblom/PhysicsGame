@@ -30,10 +30,10 @@ enum PlayerState
 public class Player extends GameObject
 {
     private final float DRAG_COEFFICIENT = 7.75f;
-    private final float FRICTION_COEFFICIENT = 0.45f;
+    private final float FRICTION_COEFFICIENT = 0.5f;
     private final float MASS = 70;
-    private final float MOVEMENT_FORCE = 425f;
-    private final float JUMP_FORCE = 23500;
+    private final float MOVEMENT_FORCE = 450f;
+    private final float JUMP_FORCE = 25000;
     private final float ANIMATION_FRAME_DURATION = 0.2f;
 
     private BufferedImage currentTexture;
@@ -77,6 +77,11 @@ public class Player extends GameObject
         isGrounded = false;
 
         animationElapsedTime = 0;
+    }
+
+    public Vector getPosition()
+    {
+        return position;
     }
 
     @Override
@@ -134,15 +139,14 @@ public class Player extends GameObject
                 break;
         }
 
-        Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), getGameState());
-        g.drawImage(currentTexture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
-
         for (CollisionPlatform ca : collisionPlatforms)
         {
-            g.setColor(Color.RED);
-            ca.draw(g, getGameState());
             g.setColor(Color.BLACK);
+            ca.draw(g, getGameState());
         }
+
+        Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), getGameState());
+        g.drawImage(currentTexture, (int)graphicalPosition.getX(), (int)graphicalPosition.getY(), null);
     }
 
 
@@ -241,7 +245,6 @@ public class Player extends GameObject
             {
                 if (m.isColliding(position, new Vector((float) standRightTexture.getWidth() / Game.PIXELS_PER_METER, (float) standRightTexture.getHeight() / Game.PIXELS_PER_METER)))
                 {
-                    System.out.println("Colliding");
                     m.hide();
                     Game.points++;
                 }

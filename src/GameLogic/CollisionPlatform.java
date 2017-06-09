@@ -41,6 +41,6 @@ public class CollisionPlatform
     public void draw(Graphics2D g, GameState gameState)
     {
         Vector graphicalPosition = Helper.cartesianToGraphical(new Vector(position.getX(), position.getY()), gameState);
-        g.drawRect((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)(size.getX() * Game.PIXELS_PER_METER), (int)(size.getY() * Game.PIXELS_PER_METER));
+        g.fillRect((int)graphicalPosition.getX(), (int)graphicalPosition.getY(), (int)(size.getX() * Game.PIXELS_PER_METER), (int)(size.getY() * Game.PIXELS_PER_METER));
     }
 }

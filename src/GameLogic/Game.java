@@ -15,6 +15,9 @@ public class Game
 
     public static int points = 0;
 
+    public static boolean lost;
+    public static boolean won;
+
     private static final float NANOSECONDS_PER_SECOND = 1000000000;
     private static final float VSYNC_FPS = 60;
 
@@ -71,7 +74,7 @@ public class Game
         float deltaTime;
         lastTimeStamp = System.nanoTime();
 
-        while (!window.shouldClose())
+        while (!window.shouldClose() && !lost && !won)
         {
             deltaTime = (System.nanoTime() - lastTimeStamp) / NANOSECONDS_PER_SECOND;
             lastTimeStamp = System.nanoTime();
@@ -91,6 +94,33 @@ public class Game
             while (System.nanoTime() - lastTimeStamp < NANOSECONDS_PER_SECOND / VSYNC_FPS)
             {
 
+            }
+        }
+
+        if (!window.shouldClose())
+        {
+            lastTimeStamp = System.nanoTime();
+            while (System.nanoTime() - lastTimeStamp < 10 * NANOSECONDS_PER_SECOND)
+            {
+                Graphics2D g = window.getGraphics();
+                g.setColor(Color.white);
+                g.fillRect(0, 0, window.getWidth(), window.getHeight());
+                g.setColor(Color.BLACK);
+                g.setFont(new Font("Arial", Font.BOLD, 50));
+
+                if (lost)
+                {
+                    g.drawImage(AssetLoader.loadImage("Lost.png"), 0, 0, null);
+                    g.drawString("Du kom försent, försök igen!", 310, 700);
+                }
+
+                if (won)
+                {
+                    g.drawImage(AssetLoader.loadImage("Won.png"), 0, 0, null);
+                    g.drawString("Du hann i tid och lyckades få med dig " + points + " stycken fika!", 7, 700);
+                }
+
+                window.renderCanvas();
             }
         }
 

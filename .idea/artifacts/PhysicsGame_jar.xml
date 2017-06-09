@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PhysicsGame:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PhysicsGame_jar</output-path>
+    <root id="archive" name="PhysicsGame.jar">
+      <element id="module-output" name="PhysicsGame" />
+    </root>
+  </artifact>
+</component>

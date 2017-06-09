@@ -15,6 +15,16 @@ public class FlammanLevel extends GameObject
     private BufferedImage background;
     private Vector backgroundPosition;
 
+    private Player player;
+    private float timer;
+
+
+
+    public FlammanLevel()
+    {
+        timer = 180f;
+    }
+
 
 
     @Override
@@ -91,13 +101,25 @@ public class FlammanLevel extends GameObject
         instantiateGameObject(muffinObject = new Muffin(new Vector(114.1f, 6.06f)));
         muffins.add(muffinObject);
 
-        instantiateGameObject(new Player(new Vector(0f, (42f + 84f) / Game.PIXELS_PER_METER), collisionPlatforms, muffins));
+        instantiateGameObject(player = new Player(new Vector(0f, (42f + 84f) / Game.PIXELS_PER_METER), collisionPlatforms, muffins));
     }
 
     @Override
     public void update(float deltaTime)
     {
+        timer -= deltaTime;
 
+        if (timer > 0)
+        {
+            if (player.getPosition().getX() > 120f)
+            {
+                Game.won = true;
+            }
+        }
+        else
+        {
+            Game.lost = true;
+        }
     }
 
     @Override
@@ -108,5 +130,6 @@ public class FlammanLevel extends GameObject
 
         g.setFont(new Font("Arial", Font.BOLD, 50));
         g.drawString(String.valueOf(Game.points), 50, 50);
+        g.drawString(String.valueOf(timer), 1155, 50);
     }
 }

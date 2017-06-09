@@ -32,7 +32,7 @@ public class MuffinPendulum extends GameObject
     @Override
     public void initialize()
     {
-        instantiateGameObject(pendulum = new Pendulum(position, 210f / Game.PIXELS_PER_METER, (float)(Math.PI / 4f), 0.995f, -4f));
+        instantiateGameObject(pendulum = new Pendulum(position, 210f / Game.PIXELS_PER_METER, (float)(Math.PI / 4f), 0.995f, -3f));
         instantiateGameObject(muffin = new Muffin(pendulum.getSwingPoint()));
     }
 

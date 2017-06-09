@@ -36,9 +36,9 @@ public class Pendulum extends GameObject
     @Override
     public void update(float deltaTime)
     {
-        if (Game.scrollOffset > topPoint.getX() - 12f)
+        if (Game.scrollOffset > topPoint.getX() - 15f)
         {
-            angularAcceleration = (float) ((-Game.GRAVITY / length) * Math.sin(angle));
+            angularAcceleration = (float)((-Game.GRAVITY / length) * Math.sin(angle));
             angularVelocity += angularAcceleration * deltaTime;
 
             angularVelocity *= dampening;
